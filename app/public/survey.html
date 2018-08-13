@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,13 +173,16 @@
                             <option value="5">5 (Strongly Agree)</option>
                         </select>
                     </div>
-                    <br><hr><br>
+                    <br>
+                    <hr>
+                    <br>
                     <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
 
                 </form>
             </div>
         </div>
-        <br><br>
+        <br>
+        <br>
         <footer class="footer">
             <div class="container">
                 <p>
@@ -189,18 +193,42 @@
         </footer>
     </div>
 </body>
+
 </html>
 
-<script type ="text/javascript">
-$(".submit").on("click", function(event) {
-    event.preventDefault();
+<script type="text/javascript">
+    $(".submit").on("click", function (event) {
+        event.preventDefault();
+        function validateForm() {
+            var isValid = true;
+            $(".form-control").each(function () {
+                if ($(this).val() === "") {
+                    isValid = false;
+                }
+            });
+            $(".chosen-select").each(function () {
+                if ($(this).val() === "") {
+                    isValid = false;
+                }
+            });
+            return isValid;
+        }
 
-    var newUser = {
-        name:   $("#userName").val().trim(),
-        photo:  $("#userPhoto").val().trim(),
-        n
-    };
-    console.log(newUser);
-    alert("Yay! You are officially matched!");
-});
+        if (validateForm() === true) {
+            var userData = {
+                name: $("#userName").val().trim(),
+                photo: $("#userPhoto").val().trim(),
+                scores: [$('#question1').val(), $('#question2').val(), $('#question3').val(), $('#question4').val(), $('#question5').val(), $('#question6').val(), $('#question7').val(), $('#question8').val(), $('#question9').val(), $('#question10').val()]
+            };
+            $.post("/api/friends", userData, function (data) {
+                // Grab the result from the AJAX post so that the best match's name and photo are displayed.
+                $("#match-name").text(data.name);
+                $("#match-img").attr("src", data.photo);
+                // Show the modal with the best match
+                $("#results-modal").modal("toggle");
+            });
+        } else {
+            alert("Please fill out all fields before submitting!");
+        }
+    });
 </script>
