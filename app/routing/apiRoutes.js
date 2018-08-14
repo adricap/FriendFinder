@@ -17,17 +17,17 @@ module.exports = function (app) {
         var userData = req.body;
         var userName = userData.name;
         var userPhoto = userData.photo;
-        var userScore = userData.scores;
+        var userScores = userData.scores;
 
         var scoreDifference = 0;
 
         for (var i = 0; i < friends.length; i++) {
-
+            console.log(friends[i].name);
             scoreDifference = 0;
 
-            for (var j = 0; j < userData.length; j++) {
+            for (var j = 0; j < friends[i].scores[j]; j++) {
 
-                scoreDifference += Math.abs(parseInt(friends[i].scores[j]) - parseInt(userScore[j]));
+                scoreDifference += Math.abs(parseInt(friends[i].scores[j]) - parseInt(userScores[j]));
 
                 if (scoreDifference <= bestMatch.friendDifference) {
 
@@ -36,12 +36,12 @@ module.exports = function (app) {
                     bestMatch.friendDifference = scoreDifference;
                 }
             }
-        };
+        }
 
         friends.push(userData);
 
         res.json(bestMatch);
 
-    });
+    })
 
 };
